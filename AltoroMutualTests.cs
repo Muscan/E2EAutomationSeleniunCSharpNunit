@@ -7,6 +7,7 @@ using OpenQA.Selenium.Chrome;
 using E2EAutomation.Utilities;
 using E2EAutomation.PageObjects;
 using System;
+using OpenQA.Selenium.Support.UI;
 
 namespace E2EAutomation
 {
@@ -21,6 +22,7 @@ namespace E2EAutomation
         {
             webDriver = new ChromeDriver();
             baseUrl = Constants.baseUrl;
+            webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(Constants.TIMEOUT);
         }
         [TearDown]
         public void TearDown()
@@ -45,8 +47,6 @@ namespace E2EAutomation
         {
             LoginPage loginPage = new LoginPage(webDriver);
             loginPage.Login(baseUrl, Constants.invalidAdmin, Constants.invalidPassword);
-
-
             Assert.True(loginPage.InvalidLoginMessage.Displayed);
 
         }
@@ -55,10 +55,24 @@ namespace E2EAutomation
         public void TransferMoney()
 
         {
-            LoginWithValidCredentials();
+
+            DefaultWait<IWebDriver> fluentWait = new DefaultWait<IWebDriver>(webDriver);
+            fluentWait.Timeout = TimeSpan.FromSeconds(5);
+            fluentWait.PollingInterval = TimeSpan.FromMilliseconds(250);
+            /* Ignore the exception - NoSuchElementException that indicates that the element is not present */
+            fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
+            fluentWait.Message = "Element to be searched not found";
+
+            LoginPage loginPage = new LoginPage(webDriver);
+            loginPage.Login(baseUrl, Constants.admin, Constants.password);
+            MainPage mainPage = new MainPage(webDriver);
+            mainPage.ClickTransferFounds();
             TransferFunds transferFunds = new TransferFunds(webDriver);
+
             transferFunds.TransferMoney(Constants.validAmount);
+
             Assert.True(transferFunds.TransferConfirmationMessage.Displayed);
+
 
 
         }

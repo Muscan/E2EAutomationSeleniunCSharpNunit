@@ -21,14 +21,14 @@ namespace E2EAutomation.PageObjects
         [FindsBy(How = How.Id, Using = "btnGetAccount")]
         public IWebElement GetAccountButton { get; set; }
 
-        [FindsBy(How = How.XPath, Using = "//*[@id=\"_ctl0__ctl0_Content_Main_promo\"]/table/tbody/tr[3]/td/a")]
+        [FindsBy(How = How.Id, Using = "MenuHyperLink3")]
         public IWebElement TransferFundsButton { get; set; }
 
-  /*      public RequestGoldVisaPage NavigateToTransferFunds()
+      public void ClickTransferFounds ()
         {
             TransferFundsButton.Click();
-            return new RequestGoldVisaPage(_driver);
-        }*/
+           
+        }
 
     }
 }
