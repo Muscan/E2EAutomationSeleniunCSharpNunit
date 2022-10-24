@@ -34,7 +34,7 @@ namespace E2EAutomation
             webDriver.Close();
         }
 
-        [Test]
+     /*   [Test]
         public void LoginWithValidCredentials()
         {
             LoginPage loginPage = new LoginPage(webDriver);
@@ -59,20 +59,18 @@ namespace E2EAutomation
             DefaultWait<IWebDriver> fluentWait = new DefaultWait<IWebDriver>(webDriver);
             fluentWait.Timeout = TimeSpan.FromSeconds(5);
             fluentWait.PollingInterval = TimeSpan.FromMilliseconds(250);
-            //Ignore the exception - NoSuchElementException that indicates that the element is not present
             fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
             fluentWait.Message = "Element to be searched not found";
 
             LoginPage loginPage = new LoginPage(webDriver);
             loginPage.Login(baseUrl, Constants.admin, Constants.password);
+
             MainPage mainPage = new MainPage(webDriver);
             mainPage.ClickTransferFounds();
+
             TransferFunds transferFunds = new TransferFunds(webDriver);
-
             transferFunds.TransferMoney(Constants.validAmount);
-
             Assert.True(transferFunds.TransferConfirmationMessage.Displayed);
-
         }
 
         [Test]
@@ -84,15 +82,12 @@ namespace E2EAutomation
             MainPage mainPage = new MainPage(webDriver);
             Assert.True(mainPage.GetAccountButton.Displayed);
 
-
-            TransferFunds transferFunds = new TransferFunds(webDriver);
-            transferFunds.ClickViewRecentTransactions();
             ViewRecentTransactionsPage vtp = new ViewRecentTransactionsPage(webDriver);
             Assert.True(vtp.RecentTransactionsH1.Displayed);
-        }
+        }*/
 
         [Test]
-        public void ListTableTest()
+        public void ViewRecentTransactionPageTable()
         {
             LoginPage loginPage = new LoginPage(webDriver);
             loginPage.Login(baseUrl, Constants.admin, Constants.password);
@@ -102,12 +97,14 @@ namespace E2EAutomation
             
             TransferFunds transferFunds = new TransferFunds(webDriver);
             transferFunds.TransferMoney(Constants.validAmount);
-            transferFunds.ClickViewRecentTransactions();
+            transferFunds.ClickTransferFunds();
 
             ViewRecentTransactionsPage viewRecentTransactionPage = new ViewRecentTransactionsPage(webDriver);
             TransactionModel transaction = viewRecentTransactionPage.GetTableData();
     
-            Assert.AreEqual( "$1000.00", transaction.Amount);
+            //Assert.AreEqual("$1000.00" ,transaction.Amount);
+            //Assert.AreEqual("Deposit"  ,transaction.Action);
+            Assert.AreEqual("800001"   , transaction.AccountId);
  
         }
     }

@@ -40,8 +40,8 @@ namespace E2EAutomation.PageObjects
         [FindsBy(How = How.Id, Using = "_ctl0__ctl0_Content_Main_postResp")]
         public IWebElement TransferConfirmationMessage { get; set; }
 
-        [FindsBy(How = How.Id, Using = "MenuHyperLink2")]
-        public IWebElement ViewRecentTransactions { get; set; }
+        [FindsBy(How = How.Id, Using = "MenuHyperLink3")]
+        public IWebElement TransferFundsURL { get; set; }
 
         public void TransferMoney(string inputValue)
         {
@@ -64,12 +64,10 @@ namespace E2EAutomation.PageObjects
 
         }
 
-        public void ClickViewRecentTransactions()
+        public void ClickTransferFunds()
         {
-            ViewRecentTransactions.Click();
+            TransferButton.Click();
         }
-
-
 
     }
 }
