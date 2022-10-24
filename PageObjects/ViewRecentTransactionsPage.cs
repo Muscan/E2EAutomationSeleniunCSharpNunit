@@ -19,22 +19,12 @@ namespace E2EAutomation.PageObjects
             PageFactory.InitElements(driver, this);
         }
 
-
-     
-
         [FindsBy(How = How.TagName, Using = "h1")]
         public IWebElement RecentTransactionsH1 { get; set; }
 
 
         [FindsBy(How = How.XPath, Using = "/html/body/table[2]/tbody/tr/td[2]/div/form/table[2]/tbody/tr[2]")]
-        ////*[@id="_ctl0__ctl0_Content_Main_MyTransactions"]
-        ////html/body/table[2]/tbody/tr/td[2]/div/form/table[2]/tbody/tr[2]
         private IWebElement FirstRow { get; set; }
-
-      
-     /*   [FindsBy(How = How.TagName, Using = "td")]
-        public IList<IWebElement> Cells { get; set; }*/
-
     
         public TransactionModel GetTableData()
         {
@@ -42,10 +32,10 @@ namespace E2EAutomation.PageObjects
             TransactionModel transaction = new TransactionModel()
             {
                  TransactionId = data[0]
-                ,TimeStamp = data[1] + " " + data[2]
-                ,AccountId = data[3]
-                ,Action = data[4]
-                ,Amount = data[5]
+                ,TimeStamp     = data[1] + " " + data[2]
+                ,AccountId     = data[3]
+                ,Action        = data[4]
+                ,Amount        = data[5]
             };
 
             return transaction;

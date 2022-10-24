@@ -34,7 +34,7 @@ namespace E2EAutomation
             webDriver.Close();
         }
 
- /*       [Test]
+        [Test]
         public void LoginWithValidCredentials()
         {
             LoginPage loginPage = new LoginPage(webDriver);
@@ -50,18 +50,16 @@ namespace E2EAutomation
             LoginPage loginPage = new LoginPage(webDriver);
             loginPage.Login(baseUrl, Constants.invalidAdmin, Constants.invalidPassword);
             Assert.True(loginPage.InvalidLoginMessage.Displayed);
-
         }
 
         [Test]
         public void TransferMoney()
-
         {
 
             DefaultWait<IWebDriver> fluentWait = new DefaultWait<IWebDriver>(webDriver);
             fluentWait.Timeout = TimeSpan.FromSeconds(5);
             fluentWait.PollingInterval = TimeSpan.FromMilliseconds(250);
-            *//* Ignore the exception - NoSuchElementException that indicates that the element is not present *//*
+            //Ignore the exception - NoSuchElementException that indicates that the element is not present
             fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
             fluentWait.Message = "Element to be searched not found";
 
@@ -86,10 +84,12 @@ namespace E2EAutomation
             MainPage mainPage = new MainPage(webDriver);
             Assert.True(mainPage.GetAccountButton.Displayed);
 
-            ViewRecentTransactionsPage viewRecentTransactionsPage = new ViewRecentTransactionsPage(webDriver);
-            viewRecentTransactionsPage.ViewRecentTransactionsPageTest();
-            Assert.True(viewRecentTransactionsPage.RecentTransactionsH1.Displayed);
-        }*/
+
+            TransferFunds transferFunds = new TransferFunds(webDriver);
+            transferFunds.ClickViewRecentTransactions();
+            ViewRecentTransactionsPage vtp = new ViewRecentTransactionsPage(webDriver);
+            Assert.True(vtp.RecentTransactionsH1.Displayed);
+        }
 
         [Test]
         public void ListTableTest()
@@ -105,16 +105,10 @@ namespace E2EAutomation
             transferFunds.ClickViewRecentTransactions();
 
             ViewRecentTransactionsPage viewRecentTransactionPage = new ViewRecentTransactionsPage(webDriver);
-            //ignora de aici
             TransactionModel transaction = viewRecentTransactionPage.GetTableData();
-            //ca vin elementele din tabela
-            ///si aici pun ce vreau sa testez
-            /////va trebui sa incheiem ca plec.te sun de e drum? De ce>
-            ///
+    
             Assert.AreEqual( "$1000.00", transaction.Amount);
-            //viewRecentTransactionPage;
-
+ 
         }
     }
-    
 }
