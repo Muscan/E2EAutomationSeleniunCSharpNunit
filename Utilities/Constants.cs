@@ -16,5 +16,6 @@ namespace E2EAutomation.Utilities
         public static string validAmount = "1000";
         public static string invalidAmount = "test";
         public const int TIMEOUT = 5000;
+       
     }
 }

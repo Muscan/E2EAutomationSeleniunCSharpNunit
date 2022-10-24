@@ -24,10 +24,18 @@ namespace E2EAutomation.PageObjects
         [FindsBy(How = How.Id, Using = "MenuHyperLink3")]
         public IWebElement TransferFundsButton { get; set; }
 
-      public void ClickTransferFounds ()
+        [FindsBy(How = How.Id, Using = "MenuHyperLink2")]
+        public IWebElement ViewRecentTransactions { get; set; }
+
+        public void ClickTransferFounds ()
         {
             TransferFundsButton.Click();
            
+        }
+
+        public void ClickViewRecentTransactions()
+        {
+            ViewRecentTransactions.Click();
         }
 
     }
