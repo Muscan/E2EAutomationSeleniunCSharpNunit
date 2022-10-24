@@ -8,11 +8,13 @@ using E2EAutomation.Utilities;
 using E2EAutomation.PageObjects;
 using System;
 using OpenQA.Selenium.Support.UI;
+using System.Collections.Generic;
+
 
 namespace E2EAutomation
 {
     [TestFixture]
-    public class AltoroTests
+    public class Tests
     {
         private IWebDriver webDriver;
         private string baseUrl;
@@ -24,15 +26,15 @@ namespace E2EAutomation
             baseUrl = Constants.baseUrl;
             webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(Constants.TIMEOUT);
         }
+
         [TearDown]
         public void TearDown()
         {
             // webDriver.Quit();
             webDriver.Close();
-
         }
 
-        [Test]
+ /*       [Test]
         public void LoginWithValidCredentials()
         {
             LoginPage loginPage = new LoginPage(webDriver);
@@ -59,7 +61,7 @@ namespace E2EAutomation
             DefaultWait<IWebDriver> fluentWait = new DefaultWait<IWebDriver>(webDriver);
             fluentWait.Timeout = TimeSpan.FromSeconds(5);
             fluentWait.PollingInterval = TimeSpan.FromMilliseconds(250);
-            /* Ignore the exception - NoSuchElementException that indicates that the element is not present */
+            *//* Ignore the exception - NoSuchElementException that indicates that the element is not present *//*
             fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
             fluentWait.Message = "Element to be searched not found";
 
@@ -73,7 +75,44 @@ namespace E2EAutomation
 
             Assert.True(transferFunds.TransferConfirmationMessage.Displayed);
 
+        }
 
+        [Test]
+        public void RecentTransactions()
+        {
+            LoginPage loginPage = new LoginPage(webDriver);
+            loginPage.Login(baseUrl, Constants.admin, Constants.password);
+
+            MainPage mainPage = new MainPage(webDriver);
+            Assert.True(mainPage.GetAccountButton.Displayed);
+
+            ViewRecentTransactionsPage viewRecentTransactionsPage = new ViewRecentTransactionsPage(webDriver);
+            viewRecentTransactionsPage.ViewRecentTransactionsPageTest();
+            Assert.True(viewRecentTransactionsPage.RecentTransactionsH1.Displayed);
+        }*/
+
+        [Test]
+        public void ListTableTest()
+        {
+            LoginPage loginPage = new LoginPage(webDriver);
+            loginPage.Login(baseUrl, Constants.admin, Constants.password);
+
+            MainPage mainPage = new MainPage(webDriver);
+            mainPage.ClickTransferFounds();
+            
+            TransferFunds transferFunds = new TransferFunds(webDriver);
+            transferFunds.TransferMoney(Constants.validAmount);
+            transferFunds.ClickViewRecentTransactions();
+
+            ViewRecentTransactionsPage viewRecentTransactionPage = new ViewRecentTransactionsPage(webDriver);
+            //ignora de aici
+            TransactionModel transaction = viewRecentTransactionPage.GetTableData();
+            //ca vin elementele din tabela
+            ///si aici pun ce vreau sa testez
+            /////va trebui sa incheiem ca plec.te sun de e drum? De ce>
+            ///
+            Assert.AreEqual( "$1000.00", transaction.Amount);
+            //viewRecentTransactionPage;
 
         }
     }
