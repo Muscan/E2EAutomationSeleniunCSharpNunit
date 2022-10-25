@@ -9,15 +9,25 @@ using E2EAutomation.PageObjects;
 using System;
 using OpenQA.Selenium.Support.UI;
 using System.Collections.Generic;
-
+using AventStack.ExtentReports;
 
 namespace E2EAutomation
 {
     [TestFixture]
+
     public class Tests
     {
         private IWebDriver webDriver;
         private string baseUrl;
+
+        public ExtentReports extent;
+        public ExtentTest test;
+        [OneTimeSetUp]
+        public void StartReport()
+        {
+
+        }
+    
 
         [SetUp]
         public void SetUpDriver()
@@ -34,7 +44,7 @@ namespace E2EAutomation
             webDriver.Close();
         }
 
-     /*   [Test]
+    /*    [Test]
         public void LoginWithValidCredentials()
         {
             LoginPage loginPage = new LoginPage(webDriver);
@@ -66,7 +76,7 @@ namespace E2EAutomation
             loginPage.Login(baseUrl, Constants.admin, Constants.password);
 
             MainPage mainPage = new MainPage(webDriver);
-            mainPage.ClickTransferFounds();
+            mainPage.ClickTransferFunds();
 
             TransferFunds transferFunds = new TransferFunds(webDriver);
             transferFunds.TransferMoney(Constants.validAmount);
@@ -84,7 +94,7 @@ namespace E2EAutomation
 
             ViewRecentTransactionsPage vtp = new ViewRecentTransactionsPage(webDriver);
             Assert.True(vtp.RecentTransactionsH1.Displayed);
-        }*/
+        }
 
         [Test]
         public void ViewRecentTransactionPageTable()
@@ -93,7 +103,8 @@ namespace E2EAutomation
             loginPage.Login(baseUrl, Constants.admin, Constants.password);
 
             MainPage mainPage = new MainPage(webDriver);
-            mainPage.ClickTransferFounds();
+            mainPage.ClickTransferFunds();
+            
             
             TransferFunds transferFunds = new TransferFunds(webDriver);
             transferFunds.TransferMoney(Constants.validAmount);
@@ -102,10 +113,19 @@ namespace E2EAutomation
             ViewRecentTransactionsPage viewRecentTransactionPage = new ViewRecentTransactionsPage(webDriver);
             TransactionModel transaction = viewRecentTransactionPage.GetTableData();
     
-            //Assert.AreEqual("$1000.00" ,transaction.Amount);
+            Assert.AreEqual("$1000.00", transaction.Amount);
             //Assert.AreEqual("Deposit"  ,transaction.Action);
-            Assert.AreEqual("800001"   , transaction.AccountId);
- 
-        }
+            //Assert.AreEqual("800001"   , transaction.AccountId);
+        }*/
+        [Test]
+        public void CheckHeaderIsDisplayed()
+        {
+            LoginPage loginPage = new LoginPage(webDriver);
+            loginPage.Login(baseUrl, Constants.admin, Constants.password);
+
+            MainPage mainPage = new MainPage(webDriver);
+            mainPage.CheckHeader();
+            Assert.True(mainPage.HelloUser.Displayed);
+        } 
     }
 }

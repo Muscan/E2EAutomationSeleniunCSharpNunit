@@ -27,7 +27,10 @@ namespace E2EAutomation.PageObjects
         [FindsBy(How = How.Id, Using = "MenuHyperLink2")]
         public IWebElement ViewRecentTransactions { get; set; }
 
-        public void ClickTransferFounds ()
+        [FindsBy(How = How.TagName, Using = "h1")]
+        public IWebElement HelloUser { get; set; }
+
+        public void ClickTransferFunds ()
         {
             TransferFundsButton.Click();
            
@@ -36,6 +39,11 @@ namespace E2EAutomation.PageObjects
         public void ClickViewRecentTransactions()
         {
             ViewRecentTransactions.Click();
+        }
+
+        public void CheckHeader()
+        {
+            HelloUser.ToString();
         }
 
     }
