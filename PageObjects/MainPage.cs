@@ -30,6 +30,8 @@ namespace E2EAutomation.PageObjects
         [FindsBy(How = How.TagName, Using = "h1")]
         public IWebElement HelloUser { get; set; }
 
+     
+
         public void ClickTransferFunds ()
         {
             TransferFundsButton.Click();
@@ -41,9 +43,10 @@ namespace E2EAutomation.PageObjects
             ViewRecentTransactions.Click();
         }
 
-        public void CheckHeader()
+        public string CheckHeader()
         {
-            HelloUser.ToString();
+            return HelloUser.Text;
+          
         }
 
     }
