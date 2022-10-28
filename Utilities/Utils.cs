@@ -25,35 +25,11 @@ namespace E2EAutomation.Utilities
 
         }
 
-        public static void MakeScreenshot(IWebDriver webDriver, string name)
+        public static string MakeScreenshot(IWebDriver webDriver)
         {
-            string path = "C:\\Users\\Mihai\\source\\repos\\E2EAutomation\\Reports\\" + name + ".png";
+            string img = ((ITakesScreenshot)webDriver).GetScreenshot().AsBase64EncodedString;
+            return img;
 
-            Screenshot screenshot = ((ITakesScreenshot)webDriver).GetScreenshot();
-            screenshot.SaveAsFile(path, ScreenshotImageFormat.Png);
-        }
-
-        /*    public static string MakeScreenshot(IWebDriver webDriver)
-            {
-                string randomName = Guid.NewGuid().ToString();
-
-                string path = "C:\\Users\\Mihai\\source\\repos\\E2EAutomation\\Reports\\"+randomName+".png";
-
-                screenshot.SaveAsFile(path, ScreenshotImageFormat.Png);
-                return path;
-            }*/
-
-        public static void MakeScreenshot(IWebDriver webDriver)
-        {
-       
-
-
-            string randomName = Guid.NewGuid().ToString();
-
-            string path = "C:\\Users\\Mihai\\source\\repos\\E2EAutomation\\Reports\\"+randomName + ".";
-            Screenshot screenshot = ((ITakesScreenshot)webDriver).GetScreenshot();
-            screenshot.SaveAsFile(path, ScreenshotImageFormat.Png);
-           
         }
     }
 }

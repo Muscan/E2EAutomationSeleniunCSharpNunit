@@ -9,7 +9,7 @@ namespace E2EAutomation.Utilities
     class Constants
     {
         public static string baseUrl = "https://demo.testfire.net/index.jsp";
-        public static string admin = "INVALID";
+        public static string admin = "admin'--";
         public static string password = "blah";
         public static string invalidAdmin = "invalid";
         public static string invalidPassword = "123";
