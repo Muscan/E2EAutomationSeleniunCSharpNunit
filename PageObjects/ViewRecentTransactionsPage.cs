@@ -25,6 +25,9 @@ namespace E2EAutomation.PageObjects
 
         [FindsBy(How = How.XPath, Using = "/html/body/table[2]/tbody/tr/td[2]/div/form/table[2]/tbody/tr[2]")]
         private IWebElement FirstRow { get; set; }
+
+        [FindsBy(How = How.Id, Using = "MenuHyperLink2")]
+        private IWebElement VRTP {get;set;}
     
         public TransactionModel GetTableData()
         {
@@ -39,6 +42,11 @@ namespace E2EAutomation.PageObjects
             };
 
             return transaction;
+        }
+
+        public void ViewRecentTransactionPageClick()
+        {
+            VRTP.Click();
         }
 
 

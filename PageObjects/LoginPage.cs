@@ -35,6 +35,9 @@ namespace E2EAutomation.PageObjects
         [FindsBy(How = How.Id, Using = "_ctl0__ctl0_Content_Main_message")]
         public IWebElement InvalidLoginMessage { get; set; }
 
+        [FindsBy(How = How.Id, Using = "_ctl0__ctl0_Content_Main_message")]
+        public IWebElement LoginFailedMessage { get; set; }
+
         public void Login(string baseUrl, string userId, string password)
         {
             webDriver.Navigate().GoToUrl(baseUrl);
@@ -44,10 +47,7 @@ namespace E2EAutomation.PageObjects
             PasswordField.Clear();
             PasswordField.SendKeys(password);
             LoginButton.Click();
-
         }
-
-
     }
 
 }
