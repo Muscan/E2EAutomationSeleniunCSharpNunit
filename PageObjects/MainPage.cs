@@ -20,8 +20,10 @@ namespace E2EAutomation.PageObjects
 
         [FindsBy(How = How.Id, Using = "btnGetAccount")]
         public IWebElement GetAccountButton { get; set; }
-
+        
         [FindsBy(How = How.Id, Using = "MenuHyperLink3")]
+
+        // [FindsBy(How = How.XPath, Using = "//*[@id=\"MenuHyperLink3\"]")]
         public IWebElement TransferFundsButton { get; set; }
 
         [FindsBy(How = How.Id, Using = "MenuHyperLink2")]
