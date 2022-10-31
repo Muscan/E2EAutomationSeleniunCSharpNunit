@@ -47,25 +47,30 @@ namespace E2EAutomation.PageObjects
         [FindsBy(How = How.TagName, Using = "h1")]
         public IWebElement TransferFundsHeader { get; set; }
 
+
+        [FindsBy(How = How.Id, Using = "MenuHyperLink2")]
+        public IWebElement ViewRecentTransactions { get; set; }
+
+        public void ClickViewRecentTransactions()
+        {
+            ViewRecentTransactions.Click();
+        }
+
         public void TransferMoney(string inputValue)
         {
 
             FromAccountFirstOption.SelectByValue("800000");
-            TransferFundsHeader.Click();
-            webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(Constants.TIMEOUT);
+           // TransferFundsHeader.Click();
+            
             ToAccountSecondOption.SelectByValue("800001");
 
             //FromAccountFirstOption.SelectedOption.Click();
             // FromAccountDropDownOption1.();
            
-            //ToAccountSecondOption.SelectByIndex(1);
-            DefaultWait<IWebDriver> fluentWait = new DefaultWait<IWebDriver>(webDriver);
-            fluentWait.Timeout = TimeSpan.FromSeconds(5);
-            fluentWait.PollingInterval = TimeSpan.FromMilliseconds(250);
-            /* Ignore the exception - NoSuchElementException that indicates that the element is not present */
-            fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
-            fluentWait.Message = "Element to be searched not found";
+            ToAccountSecondOption.SelectByIndex(1);
+            DefaultWait<IWebDriver> fluentWait = Utils.GetFluentWait(webDriver, "To or From Account not found.");
             fluentWait.Until(x => x.FindElement(By.Id("fromAccount")));
+
             ToAccountSecondOption.SelectedOption.Click();
            
             AmountInputField.Click();
@@ -73,11 +78,7 @@ namespace E2EAutomation.PageObjects
             AmountInputField.SendKeys(inputValue);
             TransferButton.Click();
             
-            fluentWait.Timeout = TimeSpan.FromSeconds(5);
-            fluentWait.PollingInterval = TimeSpan.FromMilliseconds(250);
-            /* Ignore the exception - NoSuchElementException that indicates that the element is not present */
-            fluentWait.IgnoreExceptionTypes(typeof(NoSuchElementException));
-            fluentWait.Message = "Element to be searched not found";
+
             fluentWait.Until(x => x.FindElement(By.Id("_ctl0__ctl0_Content_Main_postResp")));
 
         }

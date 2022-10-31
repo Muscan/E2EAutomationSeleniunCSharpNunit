@@ -30,22 +30,23 @@ namespace E2EAutomation
 
             report = new ExtentReports();
             report.AttachReporter(reporterType);
+            //ChromiumDriver
+            webDriver = new ChromeDriver();
+            baseUrl = Constants.baseUrl;
+            webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(Constants.TIMEOUT);
         }
         
         //SetUp runns before each test
         [SetUp]
         public void SetUpDriver()
         {
-            //ChromiumDriver
-            webDriver = new ChromeDriver();
-            baseUrl = Constants.baseUrl;
-            webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(Constants.TIMEOUT);
             //counts the nr. of test in order to arrange the tests one after another
             test = report.CreateTest(TestCases.testsName[Utils.testCount]);
             Utils.testCount++;
         }
 
-        [TearDown]
+        //this is executed one at the final
+        [OneTimeTearDown]
         public void TearDown()
         {
 
@@ -53,8 +54,39 @@ namespace E2EAutomation
             webDriver.Close();
             webDriver.Quit();
         }
-      
-        [Test,Order(1)]
+
+
+
+
+        [Test, Order(1)]
+        public void LoginWithInvalidCredentials()
+        {
+            LoginPage loginPage = new LoginPage(webDriver);
+
+
+            try
+            {
+                loginPage.Login(baseUrl, Constants.invalidAdmin, Constants.invalidPassword);
+                if (loginPage.InvalidLoginMessage.Displayed)
+                {
+                    string img = Utils.MakeScreenshot(webDriver);
+                    test.Log(Status.Pass, "Login With InvalidCredentials", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
+                }
+                else
+                {
+                    string img = Utils.MakeScreenshot(webDriver);
+                    test.Log(Status.Fail, "Invalid Login not displayed", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
+                }
+                Assert.True(loginPage.InvalidLoginMessage.Displayed);
+            }
+            catch (WebDriverException e)
+            {
+                string img = Utils.MakeScreenshot(webDriver);
+                test.Log(Status.Fail, "LoginWithInvalidCredentials Exception", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
+            }
+
+        }
+        [Test, Order(2)]
         public void LoginWithValidCredentials()
         {
 
@@ -86,111 +118,88 @@ namespace E2EAutomation
 
         }
 
-
-        [Test, Order(2)]
-        public void LoginWithInvalidCredentials()
-        {
-            LoginPage loginPage = new LoginPage(webDriver);
-
-
-            try
-            {
-                loginPage.Login(baseUrl, Constants.invalidAdmin, Constants.invalidPassword);
-                if (loginPage.InvalidLoginMessage.Displayed)
-                {
-                    string img = Utils.MakeScreenshot(webDriver);
-                    test.Log(Status.Pass, "Login With InvalidCredentials", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
-                }
-                else
-                {
-                    string img = Utils.MakeScreenshot(webDriver);
-                    test.Log(Status.Fail, "Invalid Login not displayed", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
-                }
-                Assert.True(loginPage.InvalidLoginMessage.Displayed);
-            }
-            catch (WebDriverException e)
-            {
-                string img = Utils.MakeScreenshot(webDriver);
-                test.Log(Status.Fail, "LoginWithInvalidCredentials Exception", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
-            }
-
-        }
-
         [Test, Order(3)]
         public void TransferMoney()
         {
 
-            LoginPage loginPage = new LoginPage(webDriver);
-            loginPage.Login(baseUrl, Constants.admin, Constants.password);
-
             try
             {
                 MainPage mainPage = new MainPage(webDriver);
+                //MakeScreenshot does screen shot in the place where it is called
+                //string img = Utils.MakeScreenshot(webDriver);
+                //test.Log(Status.Pass, "Hello Admin User is displayed", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
+                
+                mainPage.ClickTransferFunds();
                 TransferFunds transferFunds = new TransferFunds(webDriver);
-                if (mainPage.HelloUser.Displayed)
+                string img = Utils.MakeScreenshot(webDriver);
+                test.Log(Status.Pass, "Transfer Funds is displayed", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
+
+
+                transferFunds.TransferMoney(Constants.validAmount);
+
+                string img2 = Utils.MakeScreenshot(webDriver);
+
+                if (transferFunds.TransferConfirmationMessage.Displayed)
                 {
-                    //MakeScreenshot does screen shot in the place where it is called
-                    string img = Utils.MakeScreenshot(webDriver);
-                    test.Log(Status.Pass, "Hello Admin User is displayed", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
-                    string img2 = Utils.MakeScreenshot(webDriver);
-                    mainPage.ClickTransferFunds();
-                    test.Log(Status.Pass, "Transfer Funds is displayed", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img2).Build());
-
-
-                    transferFunds.TransferMoney(Constants.validAmount);
-
-                    string img3 = Utils.MakeScreenshot(webDriver);
-                    test.Log(Status.Pass, "Money was transfered is displayed", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
-                    //transferFunds.TransferConfirmationMessage.Displayed;
+                    test.Log(Status.Pass, "Transfer confirmation message is displayed", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img2).Build());
                 }
                 else
                 {
-                    string img = Utils.MakeScreenshot(webDriver);
-                    test.Log(Status.Fail, "Hello Admin User is not displayed", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
+                    test.Log(Status.Fail, "Elem not found!", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img2).Build());
                 }
-                Assert.IsTrue(mainPage.HelloUser.Displayed);
-                Assert.IsTrue(mainPage.ViewRecentTransactions.Displayed);
                 Assert.IsTrue(transferFunds.TransferConfirmationMessage.Displayed);
+                
             }
-
-            //page cannot be accesed. This error is thrown when the page server cannot be accessed
-            catch (NoSuchElementException e)
+            //NoSuchElementException is a child of WebDriverException
+            catch(NoSuchElementException e)
             {
                 string img = Utils.MakeScreenshot(webDriver);
                 test.Fail(e, MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
-                
-                
-
             }
-
-            DefaultWait<IWebDriver> fluentWait = Utils.GetFluentWait(webDriver, "Transfer confirmation message not displayed");
+            //page cannot be accesed. This error is thrown when the page server cannot be accessed
+            catch (WebDriverException e)
+            {
+                string img = Utils.MakeScreenshot(webDriver);
+                test.Fail(e, MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
+            }
 
 
         }  
-           /* 
-            if (transferFunds.TransferConfirmationMessage.Displayed)
-            {
-                test.Log(Status.Pass, "Transfer confirmation message is displayed");
-            }
-            else
-            {
-                test.Log(Status.Fail, "Elem not found!");
-            }
-            Assert.True(transferFunds.TransferConfirmationMessage.Displayed);
-        }*/
-
-        /* [Test]
+           
+        
+         [Test, Order(4)]
          public void RecentTransactions()
          {
-             LoginPage loginPage = new LoginPage(webDriver);
-             loginPage.Login(baseUrl, Constants.admin, Constants.password);
+            try
+            {
 
-             MainPage mainPage = new MainPage(webDriver);
-             Assert.True(mainPage.GetAccountButton.Displayed);
+                TransferFunds tf = new TransferFunds(webDriver);
+                tf.ClickViewRecentTransactions();
 
-             ViewRecentTransactionsPage vtp = new ViewRecentTransactionsPage(webDriver);
-             Assert.True(vtp.RecentTransactionsH1.Displayed);
-         }*/
+
+                ViewRecentTransactionsPage vtp = new ViewRecentTransactionsPage(webDriver);
+                TransactionModel tm = vtp.GetTableData();
+                string img = Utils.MakeScreenshot(webDriver);
+                bool isOk;
+                if (tm.AccountId.Equals("800001") && tm.Amount.Equals("$"+Constants.validAmount+".00"))
+                {
+                    test.Log(Status.Pass, "To account and amount was transfered", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
+                    isOk = true;
+                }
+                else
+                {
+
+                    test.Log(Status.Fail, "To account and amount was transfered", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
+                    isOk = false;
+                }
+                Assert.IsTrue(isOk);
+            }
+            catch (WebDriverException e)
+            {
+                string img = Utils.MakeScreenshot(webDriver);
+                test.Fail(e, MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
+            }
+         }
 
         /*        [Test]
                 public void ViewRecentTransactionPageTable()

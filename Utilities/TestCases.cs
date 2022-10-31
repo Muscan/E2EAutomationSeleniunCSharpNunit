@@ -8,9 +8,10 @@ namespace E2EAutomation.Utilities
 {
     class TestCases
     {
-        public static List<string> testsName = new List<string>() { 
-             "LoginWithValidCredentials",
-             "LoginWithInvalidCredentials",
+        public static List<string> testsName = new List<string>() {
+
+            "LoginWithInvalidCredentials",
+            "LoginWithValidCredentials",
              "TransferMoney",
              "RecentTransactions",
              "ViewRecentTransactionPageTable",
