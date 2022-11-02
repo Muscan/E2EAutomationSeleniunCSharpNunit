@@ -26,10 +26,13 @@ namespace E2EAutomation.PageObjects
         [FindsBy(How = How.XPath, Using = "/html/body/table[2]/tbody/tr/td[2]/div/form/table[2]/tbody/tr[2]")]
         private IWebElement FirstRow { get; set; }
 
+        [FindsBy(How = How.XPath, Using = "/html/body/table[2]/tbody/tr/td[2]/div/form/table[2]/tbody/tr[3]")]
+        private IWebElement SecondRow { get; set; }
+
         [FindsBy(How = How.Id, Using = "MenuHyperLink2")]
         private IWebElement VRTP {get;set;}
     
-        public TransactionModel GetTableData()
+        public TransactionModel FirstRowData()
         {
             string[] data = FirstRow.Text.Split(' ');
             TransactionModel transaction = new TransactionModel()
@@ -40,6 +43,23 @@ namespace E2EAutomation.PageObjects
                 ,Action        = data[4]
                 ,Amount        = data[5]
             };
+
+            return transaction;
+        }
+
+        public TransactionModel SecondRowData()
+        {
+            string[] data = SecondRow.Text.Split(' ');
+            TransactionModel transaction = new TransactionModel()
+            {
+
+                 TransactionId = data[0]
+                ,TimeStamp     = data[1] + " " + data[2]
+                ,AccountId     = data[3]
+                ,Action        = data[4]
+                ,Amount        = data[5]
+            };
+
 
             return transaction;
         }
