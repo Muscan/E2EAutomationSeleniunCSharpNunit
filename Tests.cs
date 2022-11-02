@@ -11,6 +11,7 @@ using System.Reflection;
 
 namespace E2EAutomation
 {
+    //[SetUpFixture]
     [TestFixture]
 
     public class Tests
@@ -35,7 +36,7 @@ namespace E2EAutomation
             baseUrl = Constants.baseUrl;
             webDriver.Manage().Timeouts().ImplicitWait = TimeSpan.FromMilliseconds(Constants.TIMEOUT);
         }
-        
+
         //SetUp runns before each test
         [SetUp]
         public void SetUpDriver()
@@ -116,6 +117,8 @@ namespace E2EAutomation
                 test.Fail(e, MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
             }
 
+
+
         }
 
         [Test, Order(3)]
@@ -128,7 +131,7 @@ namespace E2EAutomation
                 //MakeScreenshot does screen shot in the place where it is called
                 //string img = Utils.MakeScreenshot(webDriver);
                 //test.Log(Status.Pass, "Hello Admin User is displayed", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
-                
+
                 mainPage.ClickTransferFunds();
                 TransferFunds transferFunds = new TransferFunds(webDriver);
                 string img = Utils.MakeScreenshot(webDriver);
@@ -148,10 +151,10 @@ namespace E2EAutomation
                     test.Log(Status.Fail, "Elem not found!", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img2).Build());
                 }
                 Assert.IsTrue(transferFunds.TransferConfirmationMessage.Displayed);
-                
+
             }
             //NoSuchElementException is a child of WebDriverException
-            catch(NoSuchElementException e)
+            catch (NoSuchElementException e)
             {
                 string img = Utils.MakeScreenshot(webDriver);
                 test.Fail(e, MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
@@ -164,12 +167,12 @@ namespace E2EAutomation
             }
 
 
-        }  
-           
-        
-         [Test, Order(4)]
-         public void RecentTransactions()
-         {
+        }
+
+
+        [Test, Order(4)]
+        public void RecentTransactions()
+        {
             try
             {
 
@@ -178,10 +181,10 @@ namespace E2EAutomation
 
 
                 ViewRecentTransactionsPage vtp = new ViewRecentTransactionsPage(webDriver);
-                TransactionModel tm = vtp.GetTableData();
+                TransactionModel tm = vtp.FirstRowData();
                 string img = Utils.MakeScreenshot(webDriver);
                 bool isOk;
-                if (tm.AccountId.Equals("800001") && tm.Amount.Equals("$"+Constants.validAmount+".00"))
+                if (tm.AccountId.Equals("800001") && tm.Amount.Equals("$" + Constants.validAmount + ".00"))
                 {
                     test.Log(Status.Pass, "To account and amount was transfered", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
                     isOk = true;
@@ -199,46 +202,40 @@ namespace E2EAutomation
                 string img = Utils.MakeScreenshot(webDriver);
                 test.Fail(e, MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
             }
-         }
+        }
+        [Test, Order(5)]
 
-        /*        [Test]
-                public void ViewRecentTransactionPageTable()
+        public void RecentTransactionsWithdraw()
+        {
+            try
+            {
+
+                ViewRecentTransactionsPage vrtp = new ViewRecentTransactionsPage(webDriver);
+                TransactionModel tm = vrtp.SecondRowData();
+
+                bool valuesInTableSecondRowOk;
+                string img = Utils.MakeScreenshot(webDriver);
+                if (tm.AccountId.Equals(Constants.fromAccount)
+                    && tm.Amount.Equals("-$" + Constants.validAmount + ".00")
+                    && tm.Action.Equals("Withdrawal"))
                 {
-                    LoginPage loginPage = new LoginPage(webDriver);
-                    loginPage.Login(baseUrl, Constants.admin, Constants.password);
+                    test.Log(Status.Pass, "Money was withdrawed from account", MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
+                    valuesInTableSecondRowOk = true;
+                }
+                else
+                {
+                    test.Log(Status.Fail, "Money were not withdrawed from the " + Constants.fromAccount, MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
+                    valuesInTableSecondRowOk = false;
+                }
+                Assert.IsTrue(valuesInTableSecondRowOk);
+            }
+            catch (WebDriverException e)
+            {
+                string img = Utils.MakeScreenshot(webDriver);
+                test.Fail(e, MediaEntityBuilder.CreateScreenCaptureFromBase64String(img).Build());
+            }
 
-                    MainPage m
-        ainPage = new MainPage(webDriver);
-                    mainPage.ClickTransferFunds();
+        }
 
-
-                    TransferFunds transferFunds = new TransferFunds(webDriver);
-                    transferFunds.TransferMoney(Constants.validAmount);
-                    transferFunds.ClickTransferFunds();
-
-                    ViewRecentTransactionsPage viewRecentTransactionPage = new ViewRecentTransactionsPage(webDriver);
-                    TransactionModel transaction = viewRecentTransactionPage.GetTableData();
-
-                    Assert.AreEqual("$1000.00", transaction.Amount);
-                    //Assert.AreEqual("Deposit"  ,transaction.Action);
-                    //Assert.AreEqual("800001"   , transaction.AccountId);
-                }*/
-        /*  [Test]
-          public void CheckHeaderIsDisplayed()
-          {
-              LoginPage loginPage = new LoginPage(webDriver);
-              loginPage.Login(baseUrl, Constants.admin, Constants.password);
-
-              MainPage mainPage = new MainPage(webDriver);
-              //expected result
-              string welcomeUser = "Hello Admin User";
-
-              string actualResult = mainPage.CheckHeader();
-              Console.WriteLine(actualResult);
-
-
-              Assert.AreEqual(welcomeUser, actualResult);
-
-          }*/
     }
 }

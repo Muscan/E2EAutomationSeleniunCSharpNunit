@@ -14,8 +14,8 @@ namespace E2EAutomation.Utilities
             "LoginWithValidCredentials",
              "TransferMoney",
              "RecentTransactions",
-             "ViewRecentTransactionPageTable",
-             "CheckHeaderIsDisplayed"};
+             "RecentTransactionsWithDraw",
+             "NextTEST"};
 
     }
 }
