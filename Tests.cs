@@ -7,6 +7,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System;
+using System.IO;
 using System.Reflection;
 
 namespace E2EAutomation
@@ -26,8 +27,9 @@ namespace E2EAutomation
         [OneTimeSetUp]
         public void StartReport()
         {
-
-            var reporterType = new ExtentHtmlReporter("C:\\Users\\Mihai\\source\\repos\\E2EAutomation\\Reports\\Report.html");
+            
+            var reporterType = new ExtentHtmlReporter(Path.GetFullPath(Path.Combine(TestContext.CurrentContext.TestDirectory, @"Reports\Report.html")));
+            //var reporterType = new ExtentHtmlReporter("C:\\Users\\Mihai\\source\\repos\\E2EAutomation\\Reports\\Report.html");
 
             report = new ExtentReports();
             report.AttachReporter(reporterType);
